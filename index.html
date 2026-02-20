@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>UNCOMMON AI TRANSFORMATION — The Way Forward</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23ff2e2e'/><text x='50' y='72' font-size='60' text-anchor='middle' fill='white' font-family='system-ui' font-weight='800'>U</text></svg>">
   <style>
     /* ============================================
        AIDEN DESIGN SYSTEM — CSS VARIABLES
@@ -17,8 +18,8 @@
       --orange-accent: #ff6b00;
       --yellow-electric: #ffeb3b;
       --white-full: #ffffff;
-      --white-muted: rgba(255, 255, 255, 0.6);
-      --white-dim: rgba(255, 255, 255, 0.4);
+      --white-muted: rgba(255, 255, 255, 0.7);
+      --white-dim: rgba(255, 255, 255, 0.5);
       --white-faint: rgba(255, 255, 255, 0.1);
       --grid-lines: rgba(255, 255, 255, 0.02);
       --border-subtle: rgba(255, 255, 255, 0.1);
@@ -63,6 +64,20 @@
     ::-webkit-scrollbar-thumb:hover { background: var(--red-dim); }
 
     /* ============================================
+       SCROLL PROGRESS BAR
+       ============================================ */
+    .scroll-progress {
+      position: fixed;
+      top: 64px;
+      left: 0;
+      height: 3px;
+      background: var(--red-hot);
+      width: 0%;
+      z-index: 101;
+      transition: width 0.1s linear;
+    }
+
+    /* ============================================
        NAVIGATION
        ============================================ */
     .nav {
@@ -71,7 +86,7 @@
       left: 0;
       right: 0;
       z-index: 100;
-      background: var(--black-deep);
+      background: rgba(10, 10, 10, 0.95);
       border-bottom: 2px solid var(--red-hot);
       backdrop-filter: blur(12px);
     }
@@ -93,29 +108,72 @@
       letter-spacing: 0.1em;
       color: var(--red-hot);
       text-decoration: none;
+      white-space: nowrap;
     }
 
     .nav-links {
       display: flex;
-      gap: 0.25rem;
+      gap: 0.125rem;
       list-style: none;
-      overflow-x: auto;
     }
 
     .nav-links a {
       color: var(--white-dim);
       text-decoration: none;
-      font-size: 0.65rem;
+      font-size: 0.6875rem;
       font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
-      padding: 0.5rem 0.75rem;
+      letter-spacing: 0.04em;
+      padding: 0.5rem 0.625rem;
       transition: color 0.15s;
       white-space: nowrap;
     }
 
-    .nav-links a:hover {
+    .nav-links a:hover,
+    .nav-links a.active {
       color: var(--orange-accent);
+    }
+
+    /* Mobile nav */
+    .nav-toggle {
+      display: none;
+      background: none;
+      border: 1px solid var(--border-subtle);
+      color: var(--white-muted);
+      padding: 0.5rem 0.75rem;
+      font-size: 0.6875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      font-weight: 700;
+      font-family: var(--font-sans);
+    }
+
+    .nav-toggle:hover {
+      border-color: var(--red-hot);
+      color: var(--red-hot);
+    }
+
+    @media (max-width: 900px) {
+      .nav-toggle { display: block; }
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 64px;
+        left: 0;
+        right: 0;
+        background: rgba(10, 10, 10, 0.98);
+        border-bottom: 2px solid var(--red-hot);
+        flex-direction: column;
+        padding: 1rem 2rem;
+      }
+      .nav-links.open { display: flex; }
+      .nav-links a {
+        padding: 0.75rem 0;
+        font-size: 0.75rem;
+        border-bottom: 1px solid var(--white-faint);
+      }
+      .nav-links li:last-child a { border-bottom: none; }
     }
 
     /* ============================================
@@ -130,6 +188,7 @@
     .section {
       padding: 6rem 0;
       border-bottom: 1px solid var(--white-faint);
+      scroll-margin-top: 80px;
     }
 
     .section:last-of-type {
@@ -148,6 +207,7 @@
       text-align: center;
       padding-top: 64px;
       position: relative;
+      scroll-margin-top: 0;
     }
 
     .hero::before {
@@ -203,7 +263,7 @@
     .hero-scroll {
       position: absolute;
       bottom: 3rem;
-      font-size: 0.65rem;
+      font-size: 0.6875rem;
       text-transform: uppercase;
       letter-spacing: 0.2em;
       color: var(--white-dim);
@@ -320,25 +380,16 @@
     }
 
     /* ============================================
-       CARDS
+       CARDS — No hover effects (read-only document)
        ============================================ */
     .card {
       background: var(--black-card);
       border: 2px solid var(--border-subtle);
       padding: 1.75rem;
-      transition: border-color 0.15s;
-    }
-
-    .card:hover {
-      border-color: var(--orange-accent);
     }
 
     .card-red {
       border-color: var(--border-strong);
-    }
-
-    .card-red:hover {
-      border-color: var(--red-hot);
     }
 
     .card-highlight {
@@ -373,7 +424,7 @@
     }
 
     .stat-label {
-      font-size: 0.7rem;
+      font-size: 0.75rem;
       text-transform: uppercase;
       letter-spacing: 0.15em;
       color: var(--white-dim);
@@ -417,9 +468,47 @@
       color: var(--orange-accent);
     }
 
-    .list-dash li::before {
-      content: '\2014';
-      color: var(--white-dim);
+    /* ============================================
+       COLLAPSIBLE DETAILS
+       ============================================ */
+    .collapsible-summary {
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--orange-accent);
+      padding: 1rem 0;
+      border-top: 1px solid var(--white-faint);
+      margin-top: 1.5rem;
+    }
+
+    .collapsible-summary::-webkit-details-marker { display: none; }
+
+    .collapsible-summary::before {
+      content: '+';
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.5rem;
+      height: 1.5rem;
+      background: var(--orange-accent);
+      color: var(--white-full);
+      font-size: 0.875rem;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    details[open] .collapsible-summary::before {
+      content: '\2212';
+    }
+
+    .collapsible-content {
+      padding-top: 1rem;
     }
 
     /* ============================================
@@ -495,7 +584,7 @@
       position: absolute;
       top: 0;
       left: 0;
-      font-size: 0.65rem;
+      font-size: 0.6875rem;
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.2em;
@@ -526,7 +615,7 @@
     }
 
     .resp-header {
-      font-size: 0.7rem;
+      font-size: 0.75rem;
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.15em;
@@ -604,7 +693,7 @@
     }
 
     .phase-label {
-      font-size: 0.7rem;
+      font-size: 0.75rem;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.15em;
@@ -736,7 +825,7 @@
 
     .compare-table th {
       text-align: left;
-      font-size: 0.65rem;
+      font-size: 0.6875rem;
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.15em;
@@ -787,7 +876,7 @@
       display: inline-block;
       background: var(--yellow-electric);
       color: var(--black-ink);
-      font-size: 0.65rem;
+      font-size: 0.6875rem;
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.1em;
@@ -799,7 +888,7 @@
       display: inline-block;
       background: var(--red-hot);
       color: var(--white-full);
-      font-size: 0.65rem;
+      font-size: 0.6875rem;
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.1em;
@@ -808,38 +897,23 @@
     }
 
     /* ============================================
-       MOBILE NAV TOGGLE
+       STANDALONE CALLOUT (pull-quote style)
        ============================================ */
-    @media (max-width: 768px) {
-      .nav-links {
-        display: none;
-      }
-      .nav-toggle {
-        display: block;
-      }
+    .callout-standalone {
+      border: 2px solid var(--red-hot);
+      background: var(--black-deep);
+      padding: 2rem 2.5rem;
+      margin: 2rem 0;
+      text-align: center;
     }
 
-    @media (min-width: 769px) {
-      .nav-toggle {
-        display: none;
-      }
-    }
-
-    .nav-toggle {
-      background: none;
-      border: 1px solid var(--border-subtle);
-      color: var(--white-muted);
-      padding: 0.5rem 0.75rem;
-      font-size: 0.65rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      cursor: pointer;
-      font-weight: 700;
-    }
-
-    .nav-toggle:hover {
-      border-color: var(--red-hot);
+    .callout-standalone p {
       color: var(--red-hot);
+      font-weight: 700;
+      font-size: 1.0625rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin: 0;
     }
 
     /* ============================================
@@ -847,12 +921,15 @@
        ============================================ */
     @media print {
       body { background: white; color: black; }
-      .nav { display: none; }
+      .nav, .scroll-progress { display: none; }
       .section { page-break-inside: avoid; }
     }
   </style>
 </head>
 <body>
+
+  <!-- Scroll progress bar -->
+  <div class="scroll-progress" id="scrollProgress"></div>
 
   <!-- ============================================
        NAVIGATION
@@ -860,19 +937,20 @@
   <nav class="nav">
     <div class="nav-inner">
       <a href="#" class="nav-brand">Uncommon // AI Transformation</a>
-      <button class="nav-toggle" onclick="document.querySelector('.nav-links').style.display = document.querySelector('.nav-links').style.display === 'flex' ? 'none' : 'flex'">Menu</button>
-      <ul class="nav-links">
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">Menu</button>
+      <ul class="nav-links" id="navLinks">
         <li><a href="#start">Start</a></li>
         <li><a href="#audit">Audit</a></li>
         <li><a href="#built">Built</a></li>
         <li><a href="#immersion">Immersion</a></li>
         <li><a href="#stack">Stack</a></li>
-        <li><a href="#costs">Costs</a></li>
         <li><a href="#rollout">Rollout</a></li>
+        <li><a href="#building">Building</a></li>
+        <li><a href="#costs">Costs</a></li>
         <li><a href="#workstreams">Workstreams</a></li>
         <li><a href="#model">Model</a></li>
         <li><a href="#investment">Investment</a></li>
-        <li><a href="#next">Next Steps</a></li>
+        <li><a href="#next">Next</a></li>
       </ul>
     </div>
   </nav>
@@ -880,7 +958,7 @@
   <!-- ============================================
        HERO
        ============================================ -->
-  <section class="hero">
+  <section class="hero" id="hero">
     <div class="hero-label">Redbaez Consulting // February 2026</div>
     <h1>UNCOMMON</h1>
     <h2>AI Transformation<br>The Way Forward</h2>
@@ -998,66 +1076,84 @@
     </section>
 
     <!-- ============================================
-         04 — IMMERSION WEEK
+         04 — IMMERSION WEEK (condensed)
          ============================================ -->
     <section class="section" id="immersion">
       <span class="section-number">04</span>
-      <h2 class="section-title">Immersion Week Sessions</h2>
+      <h2 class="section-title">Immersion Week</h2>
       <div class="section-subtitle">16-20 February 2026: initial meetings across departments</div>
 
-      <div class="two-col-text">
-        <div>
-          <div class="schedule-day">
-            <h4>Monday 16 Feb</h4>
-            <div class="schedule-item">Dovetail/UCS/Redbaez alignment &mdash; <strong>Abigail Kennedy, Chips</strong></div>
-            <div class="schedule-item">IAGL session &mdash; <strong>Jason Cooke, Chips</strong></div>
-            <div class="schedule-item">Google Vertex AI connect &mdash; <strong>Ahmad Azraei</strong></div>
-          </div>
-
-          <div class="schedule-day">
-            <h4>Tuesday 17 Feb</h4>
-            <div class="schedule-item">AI x Strategy planning &mdash; <strong>Ipeknaz Erel, Chips</strong></div>
-            <div class="schedule-item">AI Toolstack Budget/Headcount &mdash; <strong>Philip Albert, Catherina Crijnen, Chips</strong></div>
-            <div class="schedule-item">AI Tool Stack Introduction to Design Team &mdash; <strong>Alex Nash, London Design Team</strong></div>
-          </div>
-
-          <div class="schedule-day">
-            <h4>Wednesday 18 Feb</h4>
-            <div class="schedule-item">Production Huddle AI session &mdash; <strong>Full Production team, James Guy, Chips</strong></div>
-            <div class="schedule-item">Creative AI Update &mdash; <strong>George Bear, Creatives department</strong></div>
-            <div class="schedule-item">Strategy Dept AI Immersion &mdash; <strong>Ipeknaz, Planning team, Chips</strong></div>
-            <div class="schedule-item">Finance AI session &mdash; <strong>Philip Albert, Sian Welsh, Bruce Drouin, full finance team</strong></div>
-          </div>
+      <div class="grid-3" style="margin-bottom: 1.5rem;">
+        <div class="card" style="border-color: var(--orange-accent);">
+          <div class="stat-value" style="font-size: 3rem; margin-bottom: 0.5rem;">15</div>
+          <div class="stat-label" style="text-align: left;">Sessions delivered</div>
         </div>
-
-        <div>
-          <div class="schedule-day">
-            <h4>Thursday 19 Feb</h4>
-            <div class="schedule-item">Makers AI deep-dive &mdash; <strong>Tom Sparks, Adrian Ardelean</strong></div>
-          </div>
-
-          <div class="schedule-day">
-            <h4>Friday 20 Feb</h4>
-            <div class="schedule-item">Makers AI follow-up &mdash; <strong>Tom Sparks, Adrian Ardelean, Tyrone Hannick</strong></div>
-            <div class="schedule-item">Google Search x AI connect &mdash; <strong>Rebekah Guilar, Chips, Georgia Dixon</strong></div>
-            <div class="schedule-item">Dovetail x Uncommon AI rollout planning &mdash; <strong>Abigail Kennedy, Chips, Tyrone</strong></div>
-            <div class="schedule-item">Data meeting &mdash; <strong>Robyn Darcy</strong></div>
-          </div>
-
-          <div class="gap-block" style="margin-top: 2rem;">
-            <p><strong>Status:</strong> These were introductory sessions. The full department-by-department training programme is the next major phase.</p>
-          </div>
+        <div class="card" style="border-color: var(--orange-accent);">
+          <div class="stat-value" style="font-size: 3rem; margin-bottom: 0.5rem;">5</div>
+          <div class="stat-label" style="text-align: left;">Days, every department covered</div>
+        </div>
+        <div class="card" style="border-color: var(--orange-accent);">
+          <div class="stat-value" style="font-size: 3rem; margin-bottom: 0.5rem;">8</div>
+          <div class="stat-label" style="text-align: left;">Departments engaged</div>
         </div>
       </div>
+
+      <p>Sessions with Creative, Strategy, Production, Design, Finance, New Business, and the Makers team. Plus alignment with Dovetail, IAGL, Google Vertex AI, and Google Search.</p>
+
+      <div class="gap-block">
+        <p><strong>Status:</strong> These were introductory sessions. The full department-by-department training programme is the next major phase.</p>
+      </div>
+
+      <details>
+        <summary class="collapsible-summary">Full session schedule</summary>
+        <div class="collapsible-content">
+          <div class="two-col-text">
+            <div>
+              <div class="schedule-day">
+                <h4>Monday 16 Feb</h4>
+                <div class="schedule-item">Dovetail/UCS/Redbaez alignment &mdash; <strong>Abigail Kennedy, Chips</strong></div>
+                <div class="schedule-item">IAGL session &mdash; <strong>Jason Cooke, Chips</strong></div>
+                <div class="schedule-item">Google Vertex AI connect &mdash; <strong>Ahmad Azraei</strong></div>
+              </div>
+              <div class="schedule-day">
+                <h4>Tuesday 17 Feb</h4>
+                <div class="schedule-item">AI x Strategy planning &mdash; <strong>Ipeknaz Erel, Chips</strong></div>
+                <div class="schedule-item">AI Toolstack Budget/Headcount &mdash; <strong>Philip Albert, Catherina Crijnen, Chips</strong></div>
+                <div class="schedule-item">AI Tool Stack Introduction to Design Team &mdash; <strong>Alex Nash, London Design Team</strong></div>
+              </div>
+              <div class="schedule-day">
+                <h4>Wednesday 18 Feb</h4>
+                <div class="schedule-item">Production Huddle AI session &mdash; <strong>Full Production team, James Guy, Chips</strong></div>
+                <div class="schedule-item">Creative AI Update &mdash; <strong>George Bear, Creatives department</strong></div>
+                <div class="schedule-item">Strategy Dept AI Immersion &mdash; <strong>Ipeknaz, Planning team, Chips</strong></div>
+                <div class="schedule-item">Finance AI session &mdash; <strong>Philip Albert, Sian Welsh, Bruce Drouin, full finance team</strong></div>
+              </div>
+            </div>
+            <div>
+              <div class="schedule-day">
+                <h4>Thursday 19 Feb</h4>
+                <div class="schedule-item">Makers AI deep-dive &mdash; <strong>Tom Sparks, Adrian Ardelean</strong></div>
+              </div>
+              <div class="schedule-day">
+                <h4>Friday 20 Feb</h4>
+                <div class="schedule-item">Makers AI follow-up &mdash; <strong>Tom Sparks, Adrian Ardelean, Tyrone Hannick</strong></div>
+                <div class="schedule-item">Google Search x AI connect &mdash; <strong>Rebekah Guilar, Chips, Georgia Dixon</strong></div>
+                <div class="schedule-item">Dovetail x Uncommon AI rollout planning &mdash; <strong>Abigail Kennedy, Chips, Tyrone</strong></div>
+                <div class="schedule-item">Data meeting &mdash; <strong>Robyn Darcy</strong></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </details>
     </section>
 
     <!-- ============================================
-         05 — CURRENT TOOL STACK
+         05 — CURRENT TOOL STACK + GAP
          ============================================ -->
     <section class="section" id="stack">
       <span class="section-number">05</span>
       <h2 class="section-title">Current Tool Stack</h2>
-      <div class="section-subtitle">What is confirmed and what is under evaluation</div>
+      <div class="section-subtitle">What is confirmed, what is under evaluation, and what remains</div>
 
       <div class="grid-3" style="margin-bottom: 2.5rem;">
         <div class="card card-highlight">
@@ -1087,198 +1183,22 @@
           <div style="display: flex; flex-wrap: wrap; gap: 0.25rem; margin-top: 1rem;">
             <span class="tool-tag tool-tag-pending">Imogen Licences</span>
             <span class="tool-tag tool-tag-pending">Claude Full Rollout</span>
+            <span class="tool-tag tool-tag-pending">Google Integrations</span>
           </div>
-          <p style="margin-top: 1rem; font-size: 0.8125rem;">Imogen (VEO, Nano Banana) beyond initial deployment. Additional Claude licences across the full agency.</p>
+          <p style="margin-top: 1rem; font-size: 0.8125rem;">Additional Claude licences, Imogen (VEO, Nano Banana), and Google Drive/Calendar/Gmail integration for every user.</p>
         </div>
       </div>
 
       <div class="gap-block">
-        <p><strong>Integration Required:</strong> Every user needs to be connected to Google Drive, Google Calendar, and Gmail within their Claude setup. This is foundational to making the tool stack actually useful in daily workflows.</p>
+        <p><strong>The gap:</strong> The dashboard, skills, and tools are built. But they are only useful if 223 people know how to use them. The rollout plan, training programme, and ongoing build work is where the real transformation happens.</p>
       </div>
     </section>
 
     <!-- ============================================
-         06 — COST MANAGEMENT
-         ============================================ -->
-    <section class="section" id="costs">
-      <span class="section-number">06</span>
-      <h2 class="section-title">Cost Management</h2>
-      <div class="section-subtitle">Rationalised seats and educated usage</div>
-
-      <div class="grid-2" style="margin-bottom: 2.5rem;">
-        <div class="card">
-          <h3>Seat Rationalisation</h3>
-          <p>Not every person needs every tool. Uncommon already has Gemini Pro included with Google Workspace, meaning all 223 staff have access to a capable AI assistant at no additional cost.</p>
-          <p>Claude Enterprise seats should be reserved for power users and departments where advanced capabilities genuinely matter: complex strategy work, custom Skills and Projects, deep research, long-context document analysis, and specialist prompt workflows.</p>
-          <div class="gap-block" style="margin-top: 1rem;">
-            <p>This tiered approach means Uncommon might need <strong>80-100 Claude seats</strong> rather than 223, with Gemini Pro covering the rest. That is a significant cost saving.</p>
-          </div>
-        </div>
-
-        <div class="card">
-          <h3>Token Usage: The Hidden Cost</h3>
-          <p>Claude operates on a fixed monthly token allowance per user. Tokens are consumed with every conversation, and some features burn through them significantly faster than others.</p>
-          <ul class="list-brutal" style="margin-top: 1rem;">
-            <li><strong>Opus 4.6</strong> uses substantially more tokens per interaction than Sonnet</li>
-            <li><strong>Deep Research</strong> runs consume large token volumes in a single session</li>
-            <li>A user running multiple Deep Research sessions on Opus could exhaust their monthly allowance in days</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="grid-2">
-        <div class="card card-highlight">
-          <h3>The Education Piece</h3>
-          <p>Staff need to understand the difference between models and when to use each one.</p>
-          <ul class="list-brutal" style="margin-top: 0.75rem;">
-            <li><strong>Sonnet</strong> handles the majority of daily tasks quickly and efficiently</li>
-            <li><strong>Opus</strong> is for complex reasoning, nuanced strategy work, and tasks requiring the highest capability</li>
-            <li><strong>Deep Research</strong> is powerful but expensive and should be used deliberately, not as a default</li>
-          </ul>
-        </div>
-
-        <div class="card card-highlight">
-          <h3>What This Means for Rollout</h3>
-          <p>Training must include practical guidance on token-efficient usage. Not just "here is how to use Claude" but <strong>"here is how to use Claude smartly."</strong></p>
-          <p>This is a core part of the training programme, not an afterthought.</p>
-        </div>
-      </div>
-
-      <!-- GEMINI FOR LIGHT USERS -->
-      <div style="margin-top: 3rem;">
-        <hr class="divider">
-        <span class="gemini-badge">Gemini Pro // Already Included</span>
-        <h3 style="font-size: 1.5rem; color: var(--yellow-electric); margin-bottom: 0.5rem;">Gemini Pro for Light AI Users</h3>
-        <p class="lead" style="margin-bottom: 2.5rem;">Every one of Uncommon's 223 staff already has access to Gemini Pro through Google Workspace at no additional cost. For light AI users, this is more than enough. Here is what Gemini handles well &mdash; and where Claude takes over.</p>
-
-        <div class="grid-2" style="margin-bottom: 2rem;">
-          <div class="card" style="border-color: rgba(255, 235, 59, 0.3);">
-            <span class="gemini-badge">Use Gemini For</span>
-            <h3 style="color: var(--yellow-electric);">Everyday AI Tasks</h3>
-            <ul class="list-brutal">
-              <li><strong>Quick drafts and email summaries</strong> &mdash; fast, integrated with Gmail</li>
-              <li><strong>Meeting prep and notes</strong> &mdash; pulls from Google Calendar and Docs</li>
-              <li><strong>Basic research and fact-checking</strong> &mdash; web-grounded answers with sources</li>
-              <li><strong>Document summarisation</strong> &mdash; massive context window handles 1,000+ page PDFs</li>
-              <li><strong>Brainstorming and ideation</strong> &mdash; quick lists, alternatives, first-pass thinking</li>
-              <li><strong>Data ingestion at scale</strong> &mdash; analysing large volumes of PDFs, spreadsheets, or video transcripts</li>
-              <li><strong>Google Workspace integration</strong> &mdash; native access to Drive, Sheets, Slides, and Docs</li>
-            </ul>
-          </div>
-
-          <div class="card" style="border-color: var(--border-strong);">
-            <span class="claude-badge">Upgrade to Claude For</span>
-            <h3 style="color: var(--red-hot);">Advanced Capabilities</h3>
-            <ul class="list-brutal">
-              <li><strong>Deep synthesis and reasoning</strong> &mdash; connecting dots between complex, contradictory sources</li>
-              <li><strong>Edge case detection</strong> &mdash; finding subtle logical gaps and lurking variables in data</li>
-              <li><strong>Long-session coherence</strong> &mdash; context compaction keeps Claude on track across 100+ turn conversations</li>
-              <li><strong>Polished writing and tone</strong> &mdash; more nuanced, human style for literature reviews and executive summaries</li>
-              <li><strong>Citation reliability</strong> &mdash; says "I don't know" rather than risking hallucination. Critical for client work</li>
-              <li><strong>Custom Skills and Projects</strong> &mdash; department-specific AI capabilities loaded on demand</li>
-              <li><strong>Automation pipelines</strong> &mdash; multi-agent coordination, computer use, and n8n integration</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="card" style="border-color: var(--border-subtle); overflow-x: auto;">
-          <h3>When to Use Each Tool</h3>
-          <table class="compare-table">
-            <thead>
-              <tr>
-                <th>Task</th>
-                <th>Gemini Pro</th>
-                <th>Claude</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Data Ingestion</td>
-                <td>Analysing 1,000+ PDFs or 2-hour videos</td>
-                <td>Deep analysis of 5-10 key papers</td>
-              </tr>
-              <tr>
-                <td>Speed / Cost</td>
-                <td>High-volume screening and summaries</td>
-                <td>High-quality drafting and editing</td>
-              </tr>
-              <tr>
-                <td>Reasoning</td>
-                <td>Algorithmic and mathematical speed</td>
-                <td>Abstract reasoning and edge-case detection</td>
-              </tr>
-              <tr>
-                <td>Workflow</td>
-                <td>Google Workspace / Drive integration</td>
-                <td>Multi-agent coordination and Computer Use</td>
-              </tr>
-              <tr>
-                <td>Writing</td>
-                <td>Quick drafts, outlines, first passes</td>
-                <td>Final copy, nuanced tone, client-facing output</td>
-              </tr>
-              <tr>
-                <td>Research</td>
-                <td>Broad sweeps, trend scanning, volume</td>
-                <td>Deep synthesis, critique, sourcing integrity</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div class="gap-block" style="margin-top: 2rem;">
-          <p><strong>The bottom line:</strong> Gemini Pro covers 70-80% of what most staff need on a daily basis, and they already have it. Claude Enterprise seats go to the people who need the remaining 20-30%: deep reasoning, custom Skills, automation, and polished output. This is how you get full agency coverage without 223 Claude licences.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============================================
-         07 — CURRENT STATE
-         ============================================ -->
-    <section class="section" id="state">
-      <span class="section-number">07</span>
-      <h2 class="section-title">Current State</h2>
-      <div class="section-subtitle">What exists and what still needs to happen</div>
-
-      <div class="grid-2">
-        <div class="card" style="border-color: var(--orange-accent);">
-          <h3 style="color: var(--orange-accent);">What Exists</h3>
-          <ul class="list-check list-brutal">
-            <li>Custom AI dashboard (hosted web app) with loadable skills, plugins, and projects</li>
-            <li>Skill writing tool and prompt writing tool built and functional</li>
-            <li>Comprehensive guides and documentation</li>
-            <li>10 Claude licences deployed across a mixed group</li>
-            <li>Core tool stack identified (Claude, Imogen, Runway, n8n)</li>
-            <li>Initial department sessions completed</li>
-            <li>Google partnership activated</li>
-            <li>Dovetail/Redbaez responsibilities being defined</li>
-          </ul>
-        </div>
-
-        <div class="card card-red">
-          <h3 style="color: var(--red-hot);">What Still Needs to Happen</h3>
-          <ul class="list-brutal">
-            <li>Full Claude rollout across 223 staff</li>
-            <li>Department-by-department training programme</li>
-            <li>Google Drive, Calendar, and Gmail integration for every user</li>
-            <li>Project setup and skill loading for each team</li>
-            <li>Plugin development and refinement as teams start using the system</li>
-            <li>Ongoing tool evaluation (Flim, Weavey, and whatever comes next)</li>
-            <li>n8n automation builds for cross-department workflows</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="gap-block" style="margin-top: 2rem;">
-        <p><strong>The Gap:</strong> The dashboard, skills, and tools are built. But they are only useful if 223 people know how to use them. The rollout plan, training programme, and ongoing build work is where the real transformation happens.</p>
-      </div>
-    </section>
-
-    <!-- ============================================
-         08 — THE ROLLOUT PLAN
+         06 — THE ROLLOUT PLAN (moved up for momentum)
          ============================================ -->
     <section class="section" id="rollout">
-      <span class="section-number">08</span>
+      <span class="section-number">06</span>
       <h2 class="section-title">The Rollout Plan</h2>
       <div class="section-subtitle">Getting from 10 licences to 223 trained users</div>
 
@@ -1312,10 +1232,10 @@
     </section>
 
     <!-- ============================================
-         09 — WHAT NEEDS BUILDING
+         07 — WHAT NEEDS BUILDING
          ============================================ -->
     <section class="section" id="building">
-      <span class="section-number">09</span>
+      <span class="section-number">07</span>
       <h2 class="section-title">What Needs Building</h2>
       <div class="section-subtitle">Concrete deliverables for the next phase</div>
 
@@ -1361,10 +1281,143 @@
     </section>
 
     <!-- ============================================
-         10 — THE THREE WORKSTREAMS
+         08 — COST MANAGEMENT (moved after rollout)
+         ============================================ -->
+    <section class="section" id="costs">
+      <span class="section-number">08</span>
+      <h2 class="section-title">Cost Management</h2>
+      <div class="section-subtitle">Rationalised seats and educated usage</div>
+
+      <div class="grid-2" style="margin-bottom: 2.5rem;">
+        <div class="card">
+          <h3>Seat Rationalisation</h3>
+          <p>Not every person needs every tool. Uncommon already has Gemini Pro included with Google Workspace, meaning all 223 staff have access to a capable AI assistant at no additional cost.</p>
+          <p>Claude Enterprise seats should be reserved for power users and departments where advanced capabilities genuinely matter: complex strategy work, custom Skills and Projects, deep research, long-context document analysis, and specialist prompt workflows.</p>
+          <div class="gap-block" style="margin-top: 1rem;">
+            <p>This tiered approach means Uncommon might need <strong>80-100 Claude seats</strong> rather than 223, with Gemini Pro covering the rest. That is a significant cost saving.</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Token Usage: The Hidden Cost</h3>
+          <p>Claude operates on a fixed monthly token allowance per user. Tokens are consumed with every conversation, and some features burn through them significantly faster than others.</p>
+          <ul class="list-brutal" style="margin-top: 1rem;">
+            <li><strong>Opus 4.6</strong> uses substantially more tokens per interaction than Sonnet</li>
+            <li><strong>Deep Research</strong> runs consume large token volumes in a single session</li>
+            <li>A user running multiple Deep Research sessions on Opus could exhaust their monthly allowance in days</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-bottom: 2.5rem;">
+        <div class="card card-highlight">
+          <h3>The Education Piece</h3>
+          <p>Staff need to understand the difference between models and when to use each one.</p>
+          <ul class="list-brutal" style="margin-top: 0.75rem;">
+            <li><strong>Sonnet</strong> handles the majority of daily tasks quickly and efficiently</li>
+            <li><strong>Opus</strong> is for complex reasoning, nuanced strategy work, and tasks requiring the highest capability</li>
+            <li><strong>Deep Research</strong> is powerful but expensive and should be used deliberately, not as a default</li>
+          </ul>
+        </div>
+
+        <div class="card card-highlight">
+          <h3>What This Means for Rollout</h3>
+          <p>Training must include practical guidance on token-efficient usage. Not just "here is how to use Claude" but <strong>"here is how to use Claude smartly."</strong></p>
+          <p>This is a core part of the training programme, not an afterthought.</p>
+        </div>
+      </div>
+
+      <!-- GEMINI FOR LIGHT USERS -->
+      <hr class="divider">
+      <span class="gemini-badge">Gemini Pro // Already Included</span>
+      <h3 style="font-size: 1.5rem; color: var(--yellow-electric); margin-bottom: 0.5rem;">Gemini Pro for Light AI Users</h3>
+      <p class="lead" style="margin-bottom: 2.5rem;">Every one of Uncommon's 223 staff already has access to Gemini Pro through Google Workspace at no additional cost. For light AI users, this is more than enough. Here is what Gemini handles well &mdash; and where Claude takes over.</p>
+
+      <div class="grid-2" style="margin-bottom: 2rem;">
+        <div class="card" style="border-color: rgba(255, 235, 59, 0.3);">
+          <span class="gemini-badge">Use Gemini For</span>
+          <h3 style="color: var(--yellow-electric);">Everyday AI Tasks</h3>
+          <ul class="list-brutal">
+            <li><strong>Quick drafts and email summaries</strong> &mdash; fast, integrated with Gmail</li>
+            <li><strong>Meeting prep and notes</strong> &mdash; pulls from Google Calendar and Docs</li>
+            <li><strong>Basic research and fact-checking</strong> &mdash; web-grounded answers with sources</li>
+            <li><strong>Document summarisation</strong> &mdash; massive context window handles 1,000+ page PDFs</li>
+            <li><strong>Brainstorming and ideation</strong> &mdash; quick lists, alternatives, first-pass thinking</li>
+            <li><strong>Data ingestion at scale</strong> &mdash; analysing large volumes of PDFs, spreadsheets, or video transcripts</li>
+            <li><strong>Google Workspace integration</strong> &mdash; native access to Drive, Sheets, Slides, and Docs</li>
+          </ul>
+        </div>
+
+        <div class="card" style="border-color: var(--border-strong);">
+          <span class="claude-badge">Upgrade to Claude For</span>
+          <h3 style="color: var(--red-hot);">Advanced Capabilities</h3>
+          <ul class="list-brutal">
+            <li><strong>Deep synthesis and reasoning</strong> &mdash; connecting dots between complex, contradictory sources</li>
+            <li><strong>Edge case detection</strong> &mdash; finding subtle logical gaps and lurking variables in data</li>
+            <li><strong>Long-session coherence</strong> &mdash; context compaction keeps Claude on track across 100+ turn conversations</li>
+            <li><strong>Polished writing and tone</strong> &mdash; more nuanced, human style for literature reviews and executive summaries</li>
+            <li><strong>Citation reliability</strong> &mdash; says "I don't know" rather than risking hallucination. Critical for client work</li>
+            <li><strong>Custom Skills and Projects</strong> &mdash; department-specific AI capabilities loaded on demand</li>
+            <li><strong>Automation pipelines</strong> &mdash; multi-agent coordination, computer use, and n8n integration</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card" style="border-color: var(--border-subtle); overflow-x: auto;">
+        <h3>When to Use Each Tool</h3>
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th scope="col">Task</th>
+              <th scope="col">Gemini Pro</th>
+              <th scope="col">Claude</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Data Ingestion</td>
+              <td>Analysing 1,000+ PDFs or 2-hour videos</td>
+              <td>Deep analysis of 5-10 key papers</td>
+            </tr>
+            <tr>
+              <td>Speed / Cost</td>
+              <td>High-volume screening and summaries</td>
+              <td>High-quality drafting and editing</td>
+            </tr>
+            <tr>
+              <td>Reasoning</td>
+              <td>Algorithmic and mathematical speed</td>
+              <td>Abstract reasoning and edge-case detection</td>
+            </tr>
+            <tr>
+              <td>Workflow</td>
+              <td>Google Workspace / Drive integration</td>
+              <td>Multi-agent coordination and Computer Use</td>
+            </tr>
+            <tr>
+              <td>Writing</td>
+              <td>Quick drafts, outlines, first passes</td>
+              <td>Final copy, nuanced tone, client-facing output</td>
+            </tr>
+            <tr>
+              <td>Research</td>
+              <td>Broad sweeps, trend scanning, volume</td>
+              <td>Deep synthesis, critique, sourcing integrity</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="gap-block" style="margin-top: 2rem;">
+        <p><strong>The bottom line:</strong> Gemini Pro covers 70-80% of what most staff need on a daily basis, and they already have it. Claude Enterprise seats go to the people who need the remaining 20-30%: deep reasoning, custom Skills, automation, and polished output. This is how you get full agency coverage without 223 Claude licences.</p>
+      </div>
+    </section>
+
+    <!-- ============================================
+         09 — THE THREE WORKSTREAMS
          ============================================ -->
     <section class="section" id="workstreams">
-      <span class="section-number">10</span>
+      <span class="section-number">09</span>
       <h2 class="section-title">The Three Workstreams</h2>
       <div class="section-subtitle">Ongoing work required to realise the AI investment</div>
 
@@ -1396,10 +1449,10 @@
     </section>
 
     <!-- ============================================
-         11 — THE MODEL
+         10 — THE MODEL
          ============================================ -->
     <section class="section" id="model">
-      <span class="section-number">11</span>
+      <span class="section-number">10</span>
       <h2 class="section-title">The Model</h2>
       <div class="section-subtitle">4 days per month: embedded AI expertise</div>
 
@@ -1425,16 +1478,19 @@
           <hr class="divider" style="margin: 1.5rem 0;">
           <h3>Why This Expertise Matters</h3>
           <p>This is not generic IT consultancy. It requires deep understanding of advertising and creative agency workflows, hands-on AI build capability (Claude Skills, n8n, prompt engineering, web development), vendor knowledge across a rapidly evolving AI landscape, and 30 years of agency experience to know what actually helps creative teams.</p>
-          <p style="color: var(--red-hot); font-weight: 700; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 1rem;">Nobody else in the Uncommon ecosystem can do this work.</p>
         </div>
+      </div>
+
+      <div class="callout-standalone">
+        <p>Nobody else in the Uncommon ecosystem can do this work.</p>
       </div>
     </section>
 
     <!-- ============================================
-         12 — CLEAR RESPONSIBILITIES
+         11 — CLEAR RESPONSIBILITIES
          ============================================ -->
     <section class="section" id="responsibilities">
-      <span class="section-number">12</span>
+      <span class="section-number">11</span>
       <h2 class="section-title">Clear Responsibilities</h2>
       <div class="section-subtitle">Two essential roles, clearly delineated</div>
 
@@ -1474,10 +1530,10 @@
     </section>
 
     <!-- ============================================
-         13 — THE INVESTMENT CASE
+         12 — THE INVESTMENT CASE
          ============================================ -->
     <section class="section" id="investment">
-      <span class="section-number">13</span>
+      <span class="section-number">12</span>
       <h2 class="section-title">The Investment Case</h2>
       <div class="section-subtitle">Value delivered and value at stake</div>
 
@@ -1515,10 +1571,10 @@
     </section>
 
     <!-- ============================================
-         14 — NEXT STEPS
+         13 — NEXT STEPS
          ============================================ -->
     <section class="section" id="next">
-      <span class="section-number">14</span>
+      <span class="section-number">13</span>
       <h2 class="section-title">Next Steps</h2>
       <div class="section-subtitle">Clear actions, clear timeline</div>
 
@@ -1577,8 +1633,43 @@
       <p style="color: var(--white-full); font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.875rem;">Tom Hyde / Redbaez Consulting</p>
       <p><a href="mailto:tomh@redbaez.com">tomh@redbaez.com</a></p>
     </div>
-    <p style="margin-top: 3rem; font-size: 0.65rem; color: var(--white-faint); text-transform: uppercase; letter-spacing: 0.15em;">February 2026 // Confidential</p>
+    <p style="margin-top: 3rem; font-size: 0.6875rem; color: var(--white-faint); text-transform: uppercase; letter-spacing: 0.15em;">February 2026</p>
   </footer>
+
+  <!-- ============================================
+       SCRIPTS
+       ============================================ -->
+  <script>
+    // Scroll progress bar
+    window.addEventListener('scroll', function() {
+      var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+      var scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      var progress = (scrollTop / scrollHeight) * 100;
+      document.getElementById('scrollProgress').style.width = progress + '%';
+    });
+
+    // Mobile nav toggle (proper)
+    var toggle = document.getElementById('navToggle');
+    var links = document.getElementById('navLinks');
+
+    toggle.addEventListener('click', function() {
+      links.classList.toggle('open');
+    });
+
+    // Close mobile nav on link click
+    links.querySelectorAll('a').forEach(function(link) {
+      link.addEventListener('click', function() {
+        links.classList.remove('open');
+      });
+    });
+
+    // Close mobile nav on resize to desktop
+    window.addEventListener('resize', function() {
+      if (window.innerWidth > 900) {
+        links.classList.remove('open');
+      }
+    });
+  </script>
 
 </body>
 </html>
