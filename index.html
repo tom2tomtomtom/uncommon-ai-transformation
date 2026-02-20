@@ -1,0 +1,1584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UNCOMMON AI TRANSFORMATION — The Way Forward</title>
+  <style>
+    /* ============================================
+       AIDEN DESIGN SYSTEM — CSS VARIABLES
+       ============================================ */
+    :root {
+      --black-ink: #050505;
+      --black-deep: #0a0a0a;
+      --black-card: #0f0f0f;
+      --red-hot: #ff2e2e;
+      --red-dim: #cc2525;
+      --orange-accent: #ff6b00;
+      --yellow-electric: #ffeb3b;
+      --white-full: #ffffff;
+      --white-muted: rgba(255, 255, 255, 0.6);
+      --white-dim: rgba(255, 255, 255, 0.4);
+      --white-faint: rgba(255, 255, 255, 0.1);
+      --grid-lines: rgba(255, 255, 255, 0.02);
+      --border-subtle: rgba(255, 255, 255, 0.1);
+      --border-strong: rgba(255, 46, 46, 0.3);
+      --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
+    }
+
+    /* ============================================
+       RESET & BASE
+       ============================================ */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      border-radius: 0 !important;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--black-ink);
+      color: var(--white-full);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      background-image:
+        linear-gradient(var(--grid-lines) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-lines) 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+
+    ::selection {
+      background: var(--red-hot);
+      color: var(--white-full);
+    }
+
+    ::-webkit-scrollbar { width: 10px; }
+    ::-webkit-scrollbar-track { background: var(--black-deep); }
+    ::-webkit-scrollbar-thumb { background: var(--red-hot); }
+    ::-webkit-scrollbar-thumb:hover { background: var(--red-dim); }
+
+    /* ============================================
+       NAVIGATION
+       ============================================ */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: var(--black-deep);
+      border-bottom: 2px solid var(--red-hot);
+      backdrop-filter: blur(12px);
+    }
+
+    .nav-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 64px;
+    }
+
+    .nav-brand {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--red-hot);
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 0.25rem;
+      list-style: none;
+      overflow-x: auto;
+    }
+
+    .nav-links a {
+      color: var(--white-dim);
+      text-decoration: none;
+      font-size: 0.65rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 0.5rem 0.75rem;
+      transition: color 0.15s;
+      white-space: nowrap;
+    }
+
+    .nav-links a:hover {
+      color: var(--orange-accent);
+    }
+
+    /* ============================================
+       LAYOUT
+       ============================================ */
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    .section {
+      padding: 6rem 0;
+      border-bottom: 1px solid var(--white-faint);
+    }
+
+    .section:last-of-type {
+      border-bottom: none;
+    }
+
+    /* ============================================
+       HERO
+       ============================================ */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding-top: 64px;
+      position: relative;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 64px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--red-hot), transparent);
+    }
+
+    .hero-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--orange-accent);
+      margin-bottom: 2rem;
+      font-family: var(--font-mono);
+    }
+
+    .hero h1 {
+      font-size: clamp(2.5rem, 8vw, 6rem);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      color: var(--red-hot);
+      margin-bottom: 1rem;
+    }
+
+    .hero h2 {
+      font-size: clamp(1.5rem, 4vw, 3rem);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--white-full);
+      margin-bottom: 3rem;
+    }
+
+    .hero-meta {
+      font-size: 0.875rem;
+      color: var(--white-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .hero-meta span {
+      color: var(--orange-accent);
+    }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 3rem;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--white-dim);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 1; }
+    }
+
+    /* ============================================
+       TYPOGRAPHY
+       ============================================ */
+    .section-number {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--red-hot);
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      margin-bottom: 0.75rem;
+      display: block;
+    }
+
+    .section-title {
+      font-size: clamp(1.75rem, 4vw, 2.75rem);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+      color: var(--red-hot);
+      margin-bottom: 0.5rem;
+      line-height: 1.1;
+    }
+
+    .section-subtitle {
+      font-size: 0.875rem;
+      color: var(--orange-accent);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 600;
+      margin-bottom: 3rem;
+      font-style: italic;
+    }
+
+    h3 {
+      font-size: 1.125rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--orange-accent);
+      margin-bottom: 0.75rem;
+      letter-spacing: 0.02em;
+    }
+
+    h4 {
+      font-size: 0.875rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--white-full);
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.05em;
+    }
+
+    p {
+      color: var(--white-muted);
+      font-size: 0.9375rem;
+      line-height: 1.7;
+      margin-bottom: 1rem;
+    }
+
+    p:last-child {
+      margin-bottom: 0;
+    }
+
+    .lead {
+      font-size: 1.0625rem;
+      line-height: 1.8;
+      color: var(--white-muted);
+      max-width: 48rem;
+    }
+
+    /* ============================================
+       GRID LAYOUTS
+       ============================================ */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    @media (min-width: 640px) {
+      .grid-2 { grid-template-columns: repeat(2, 1fr); }
+      .grid-4 { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (min-width: 768px) {
+      .grid-3 { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    @media (min-width: 1024px) {
+      .grid-4 { grid-template-columns: repeat(4, 1fr); }
+    }
+
+    /* ============================================
+       CARDS
+       ============================================ */
+    .card {
+      background: var(--black-card);
+      border: 2px solid var(--border-subtle);
+      padding: 1.75rem;
+      transition: border-color 0.15s;
+    }
+
+    .card:hover {
+      border-color: var(--orange-accent);
+    }
+
+    .card-red {
+      border-color: var(--border-strong);
+    }
+
+    .card-red:hover {
+      border-color: var(--red-hot);
+    }
+
+    .card-highlight {
+      border-color: var(--red-hot);
+      position: relative;
+    }
+
+    .card-highlight::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--red-hot);
+    }
+
+    /* ============================================
+       STAT BLOCKS
+       ============================================ */
+    .stat {
+      text-align: center;
+      padding: 2rem 1.5rem;
+    }
+
+    .stat-value {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--red-hot);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--white-dim);
+      font-weight: 600;
+    }
+
+    /* ============================================
+       LISTS
+       ============================================ */
+    .list-brutal {
+      list-style: none;
+      padding: 0;
+    }
+
+    .list-brutal li {
+      padding: 0.625rem 0;
+      padding-left: 1.25rem;
+      position: relative;
+      color: var(--white-muted);
+      font-size: 0.9375rem;
+      line-height: 1.6;
+      border-bottom: 1px solid var(--white-faint);
+    }
+
+    .list-brutal li:last-child {
+      border-bottom: none;
+    }
+
+    .list-brutal li::before {
+      content: '//';
+      position: absolute;
+      left: 0;
+      color: var(--red-hot);
+      font-weight: 700;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+    }
+
+    .list-check li::before {
+      content: '\2713';
+      color: var(--orange-accent);
+    }
+
+    .list-dash li::before {
+      content: '\2014';
+      color: var(--white-dim);
+    }
+
+    /* ============================================
+       SCHEDULE TABLE
+       ============================================ */
+    .schedule-day {
+      margin-bottom: 2rem;
+    }
+
+    .schedule-day h4 {
+      color: var(--red-hot);
+      font-size: 0.875rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--border-strong);
+      margin-bottom: 1rem;
+    }
+
+    .schedule-item {
+      padding: 0.5rem 0;
+      padding-left: 1rem;
+      border-left: 2px solid var(--border-subtle);
+      margin-bottom: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--white-muted);
+      line-height: 1.5;
+    }
+
+    .schedule-item strong {
+      color: var(--white-full);
+    }
+
+    /* ============================================
+       TOOL STACK
+       ============================================ */
+    .tool-tag {
+      display: inline-block;
+      background: var(--black-card);
+      border: 1px solid var(--border-subtle);
+      padding: 0.375rem 0.875rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--white-muted);
+      margin: 0.25rem;
+    }
+
+    .tool-tag-active {
+      border-color: var(--orange-accent);
+      color: var(--orange-accent);
+    }
+
+    .tool-tag-eval {
+      border-color: var(--yellow-electric);
+      color: var(--yellow-electric);
+    }
+
+    .tool-tag-pending {
+      border-color: var(--white-dim);
+      color: var(--white-dim);
+      border-style: dashed;
+    }
+
+    /* ============================================
+       WORKSTREAM COLUMNS
+       ============================================ */
+    .workstream {
+      position: relative;
+      padding-top: 3rem;
+    }
+
+    .workstream-label {
+      position: absolute;
+      top: 0;
+      left: 0;
+      font-size: 0.65rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      padding: 0.375rem 1rem;
+      font-family: var(--font-mono);
+    }
+
+    .workstream-build .workstream-label {
+      background: var(--red-hot);
+      color: var(--white-full);
+    }
+
+    .workstream-train .workstream-label {
+      background: var(--orange-accent);
+      color: var(--white-full);
+    }
+
+    .workstream-evolve .workstream-label {
+      background: var(--yellow-electric);
+      color: var(--black-ink);
+    }
+
+    /* ============================================
+       RESPONSIBILITY SPLIT
+       ============================================ */
+    .resp-col {
+      padding: 2rem;
+    }
+
+    .resp-header {
+      font-size: 0.7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      padding: 0.5rem 1rem;
+      margin-bottom: 1.5rem;
+      display: inline-block;
+    }
+
+    .resp-redbaez .resp-header {
+      background: var(--red-hot);
+      color: var(--white-full);
+    }
+
+    .resp-dovetail .resp-header {
+      background: var(--white-full);
+      color: var(--black-ink);
+    }
+
+    /* ============================================
+       CTA BLOCK
+       ============================================ */
+    .cta-block {
+      background: var(--black-card);
+      border: 2px solid var(--red-hot);
+      padding: 4rem 2rem;
+      text-align: center;
+      position: relative;
+    }
+
+    .cta-block::before,
+    .cta-block::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--red-hot);
+    }
+
+    .cta-block::before { top: 0; }
+    .cta-block::after { bottom: 0; }
+
+    .cta-block h2 {
+      font-size: clamp(1.5rem, 4vw, 2.5rem);
+      font-weight: 800;
+      text-transform: uppercase;
+      color: var(--white-full);
+      margin-bottom: 1rem;
+      letter-spacing: -0.01em;
+    }
+
+    /* ============================================
+       PHASE TIMELINE
+       ============================================ */
+    .phase {
+      position: relative;
+      padding-left: 2rem;
+      padding-bottom: 2rem;
+      border-left: 2px solid var(--border-subtle);
+    }
+
+    .phase:last-child {
+      border-left-color: transparent;
+    }
+
+    .phase::before {
+      content: '';
+      position: absolute;
+      left: -7px;
+      top: 0.25rem;
+      width: 12px;
+      height: 12px;
+      background: var(--red-hot);
+      border: 2px solid var(--black-ink);
+    }
+
+    .phase-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--red-hot);
+      margin-bottom: 0.5rem;
+      font-family: var(--font-mono);
+    }
+
+    /* ============================================
+       NUMBERED LIST
+       ============================================ */
+    .numbered-list {
+      list-style: none;
+      padding: 0;
+      counter-reset: item;
+    }
+
+    .numbered-list li {
+      counter-increment: item;
+      padding: 1rem 0 1rem 3rem;
+      position: relative;
+      color: var(--white-muted);
+      font-size: 0.9375rem;
+      border-bottom: 1px solid var(--white-faint);
+    }
+
+    .numbered-list li::before {
+      content: counter(item);
+      position: absolute;
+      left: 0;
+      top: 1rem;
+      width: 1.75rem;
+      height: 1.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--red-hot);
+      color: var(--white-full);
+      font-size: 0.75rem;
+      font-weight: 800;
+      font-family: var(--font-mono);
+    }
+
+    /* ============================================
+       DIVIDER
+       ============================================ */
+    .divider {
+      border: none;
+      height: 2px;
+      background: linear-gradient(90deg, var(--red-hot), var(--orange-accent), transparent);
+      margin: 3rem 0;
+    }
+
+    /* ============================================
+       TWO COLUMN TEXT
+       ============================================ */
+    .two-col-text {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+
+    @media (min-width: 768px) {
+      .two-col-text { grid-template-columns: 1fr 1fr; gap: 4rem; }
+    }
+
+    /* ============================================
+       FOOTER
+       ============================================ */
+    .footer {
+      background: var(--black-deep);
+      border-top: 2px solid var(--red-hot);
+      padding: 3rem 2rem;
+      text-align: center;
+    }
+
+    .footer-tagline {
+      font-size: clamp(1.25rem, 3vw, 2rem);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+      color: var(--red-hot);
+      margin-bottom: 0.5rem;
+    }
+
+    .footer-contact {
+      font-size: 0.8125rem;
+      color: var(--white-dim);
+      margin-top: 2rem;
+    }
+
+    .footer-contact a {
+      color: var(--orange-accent);
+      text-decoration: none;
+    }
+
+    .footer-contact a:hover {
+      color: var(--red-hot);
+    }
+
+    /* ============================================
+       GAP HIGHLIGHT
+       ============================================ */
+    .gap-block {
+      background: var(--black-deep);
+      border-left: 4px solid var(--red-hot);
+      padding: 1.5rem 2rem;
+      margin: 2rem 0;
+    }
+
+    .gap-block p {
+      color: var(--white-muted);
+      font-size: 0.9375rem;
+      margin: 0;
+    }
+
+    .gap-block strong {
+      color: var(--red-hot);
+    }
+
+    /* ============================================
+       COMPARISON TABLE
+       ============================================ */
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1.5rem;
+    }
+
+    .compare-table th {
+      text-align: left;
+      font-size: 0.65rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      padding: 0.75rem 1rem;
+      border-bottom: 2px solid var(--red-hot);
+      color: var(--white-dim);
+    }
+
+    .compare-table th:nth-child(2) {
+      color: var(--yellow-electric);
+    }
+
+    .compare-table th:nth-child(3) {
+      color: var(--red-hot);
+    }
+
+    .compare-table td {
+      padding: 0.75rem 1rem;
+      font-size: 0.8125rem;
+      color: var(--white-muted);
+      border-bottom: 1px solid var(--white-faint);
+      vertical-align: top;
+    }
+
+    .compare-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .compare-table td:first-child {
+      font-weight: 700;
+      color: var(--white-full);
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+      white-space: nowrap;
+    }
+
+    .compare-table td:nth-child(2) {
+      color: var(--yellow-electric);
+      opacity: 0.85;
+    }
+
+    .compare-table td:nth-child(3) {
+      color: var(--orange-accent);
+    }
+
+    .gemini-badge {
+      display: inline-block;
+      background: var(--yellow-electric);
+      color: var(--black-ink);
+      font-size: 0.65rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 0.25rem 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .claude-badge {
+      display: inline-block;
+      background: var(--red-hot);
+      color: var(--white-full);
+      font-size: 0.65rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 0.25rem 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    /* ============================================
+       MOBILE NAV TOGGLE
+       ============================================ */
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+      .nav-toggle {
+        display: block;
+      }
+    }
+
+    @media (min-width: 769px) {
+      .nav-toggle {
+        display: none;
+      }
+    }
+
+    .nav-toggle {
+      background: none;
+      border: 1px solid var(--border-subtle);
+      color: var(--white-muted);
+      padding: 0.5rem 0.75rem;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .nav-toggle:hover {
+      border-color: var(--red-hot);
+      color: var(--red-hot);
+    }
+
+    /* ============================================
+       PRINT STYLES
+       ============================================ */
+    @media print {
+      body { background: white; color: black; }
+      .nav { display: none; }
+      .section { page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================
+       NAVIGATION
+       ============================================ -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="#" class="nav-brand">Uncommon // AI Transformation</a>
+      <button class="nav-toggle" onclick="document.querySelector('.nav-links').style.display = document.querySelector('.nav-links').style.display === 'flex' ? 'none' : 'flex'">Menu</button>
+      <ul class="nav-links">
+        <li><a href="#start">Start</a></li>
+        <li><a href="#audit">Audit</a></li>
+        <li><a href="#built">Built</a></li>
+        <li><a href="#immersion">Immersion</a></li>
+        <li><a href="#stack">Stack</a></li>
+        <li><a href="#costs">Costs</a></li>
+        <li><a href="#rollout">Rollout</a></li>
+        <li><a href="#workstreams">Workstreams</a></li>
+        <li><a href="#model">Model</a></li>
+        <li><a href="#investment">Investment</a></li>
+        <li><a href="#next">Next Steps</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ============================================
+       HERO
+       ============================================ -->
+  <section class="hero">
+    <div class="hero-label">Redbaez Consulting // February 2026</div>
+    <h1>UNCOMMON</h1>
+    <h2>AI Transformation<br>The Way Forward</h2>
+    <p class="hero-meta">Prepared by <span>Tom Hyde</span> / Redbaez Consulting</p>
+    <div class="hero-scroll">Scroll to begin &darr;</div>
+  </section>
+
+  <div class="container">
+
+    <!-- ============================================
+         01 — WHERE WE STARTED
+         ============================================ -->
+    <section class="section" id="start">
+      <span class="section-number">01</span>
+      <h2 class="section-title">Where We Started</h2>
+      <div class="section-subtitle">August 2025: the state of AI at Uncommon</div>
+
+      <div class="grid-2" style="margin-bottom: 2rem;">
+        <div class="card card-red">
+          <h3>Tool Chaos</h3>
+          <div class="stat-value" style="font-size: 3.5rem; margin-bottom: 0.75rem;">81</div>
+          <div class="stat-label" style="text-align: left; margin-bottom: 1rem;">Different AI tools in use</div>
+          <p>No governance, no oversight, no legal review.</p>
+        </div>
+        <div class="card card-red">
+          <h3>Scattered Adoption</h3>
+          <div style="display: flex; gap: 2rem; margin-bottom: 1rem;">
+            <div>
+              <div class="stat-value" style="font-size: 2.5rem;">40%</div>
+              <div class="stat-label" style="text-align: left;">Experimenting</div>
+            </div>
+            <div>
+              <div class="stat-value" style="font-size: 2.5rem; color: var(--white-dim);">60%</div>
+              <div class="stat-label" style="text-align: left;">Waiting</div>
+            </div>
+          </div>
+          <p>Individual staff expensing personal subscriptions with no coordination.</p>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card card-red">
+          <h3>Legal Exposure</h3>
+          <p>Unauthorised tools creating IP liability. Client work at risk from unvetted platforms. No audit trail, no approval process.</p>
+        </div>
+        <div class="card card-highlight">
+          <h3>The Real Problem</h3>
+          <p>Uncommon had enthusiasm without infrastructure. The agency needed a systematic transformation: audit everything, establish legal foundations, consolidate tools, build department-specific capabilities, and create an ongoing programme of skills and automation.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================
+         02 — DISCOVERY AND AUDIT
+         ============================================ -->
+    <section class="section" id="audit">
+      <span class="section-number">02</span>
+      <h2 class="section-title">Discovery and Audit</h2>
+      <div class="section-subtitle">Phase 1: August to November 2025</div>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3>Complete Tool Audit</h3>
+          <p>Mapped all 81 tools across every department. Identified duplicates, risks, and rationalisation opportunities. Built the full picture nobody had.</p>
+        </div>
+        <div class="card">
+          <h3>Legal Risk Assessment</h3>
+          <p>Flagged Leonardo.AI IP exposure before it became a problem. Assessed ElevenLabs, Midjourney, and others against IP indemnification, training data transparency, and GDPR compliance. Protected the agency from litigation risk.</p>
+        </div>
+        <div class="card">
+          <h3>Department Interviews</h3>
+          <p>Sessions with every department head across Creative, Strategy, Production, Design, Account Management, New Business, Finance, and HR. Quantified specific pain points with actual hours lost. Mapped workflows and identified automation opportunities.</p>
+        </div>
+        <div class="card card-highlight">
+          <h3>Tool Rationalisation</h3>
+          <p>Consolidated the recommended stack from 81 scattered tools down to a governed core set. Eliminated duplicate subscriptions, unauthorised purchases, and high-risk platforms.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================
+         03 — WHAT WE HAVE BUILT
+         ============================================ -->
+    <section class="section" id="built">
+      <span class="section-number">03</span>
+      <h2 class="section-title">What We Have Built</h2>
+      <div class="section-subtitle">The Uncommon AI Dashboard: a custom platform</div>
+
+      <div class="grid-3">
+        <div class="card">
+          <h3>Custom Web Application</h3>
+          <p>A fully functional, hosted dashboard purpose-built for Uncommon. This is not an off-the-shelf product. It is a bespoke AI command centre designed around how Uncommon actually works.</p>
+        </div>
+        <div class="card">
+          <h3>Loadable Skills per Department</h3>
+          <p>Pre-built Claude Skills tailored to each department's specific workflows. Creative, Strategy, Production, Design, Account Management, New Business. Each skill encodes domain knowledge, prompt patterns, and output formats relevant to that team.</p>
+        </div>
+        <div class="card">
+          <h3>Loadable Plugins and Projects</h3>
+          <p>Department-specific Claude Projects ready to be loaded and used. Plugins that extend Claude's capabilities for Uncommon-specific tasks. A structured architecture that grows as the agency's needs evolve.</p>
+        </div>
+        <div class="card">
+          <h3>Skill Writing Tool</h3>
+          <p>A tool that enables Uncommon to create new Claude Skills as needs emerge. This is not a one-off delivery. It is infrastructure for ongoing capability development.</p>
+        </div>
+        <div class="card">
+          <h3>Prompt Writing Tool</h3>
+          <p>A guided system for writing effective prompts. Designed to bridge the gap between AI capability and team confidence. Makes prompt engineering accessible to non-technical staff.</p>
+        </div>
+        <div class="card">
+          <h3>Comprehensive Guides</h3>
+          <p>Detailed documentation covering tool usage, best practices, workflow integration, and troubleshooting. Built to support the rollout and ongoing adoption.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================
+         04 — IMMERSION WEEK
+         ============================================ -->
+    <section class="section" id="immersion">
+      <span class="section-number">04</span>
+      <h2 class="section-title">Immersion Week Sessions</h2>
+      <div class="section-subtitle">16-20 February 2026: initial meetings across departments</div>
+
+      <div class="two-col-text">
+        <div>
+          <div class="schedule-day">
+            <h4>Monday 16 Feb</h4>
+            <div class="schedule-item">Dovetail/UCS/Redbaez alignment &mdash; <strong>Abigail Kennedy, Chips</strong></div>
+            <div class="schedule-item">IAGL session &mdash; <strong>Jason Cooke, Chips</strong></div>
+            <div class="schedule-item">Google Vertex AI connect &mdash; <strong>Ahmad Azraei</strong></div>
+          </div>
+
+          <div class="schedule-day">
+            <h4>Tuesday 17 Feb</h4>
+            <div class="schedule-item">AI x Strategy planning &mdash; <strong>Ipeknaz Erel, Chips</strong></div>
+            <div class="schedule-item">AI Toolstack Budget/Headcount &mdash; <strong>Philip Albert, Catherina Crijnen, Chips</strong></div>
+            <div class="schedule-item">AI Tool Stack Introduction to Design Team &mdash; <strong>Alex Nash, London Design Team</strong></div>
+          </div>
+
+          <div class="schedule-day">
+            <h4>Wednesday 18 Feb</h4>
+            <div class="schedule-item">Production Huddle AI session &mdash; <strong>Full Production team, James Guy, Chips</strong></div>
+            <div class="schedule-item">Creative AI Update &mdash; <strong>George Bear, Creatives department</strong></div>
+            <div class="schedule-item">Strategy Dept AI Immersion &mdash; <strong>Ipeknaz, Planning team, Chips</strong></div>
+            <div class="schedule-item">Finance AI session &mdash; <strong>Philip Albert, Sian Welsh, Bruce Drouin, full finance team</strong></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="schedule-day">
+            <h4>Thursday 19 Feb</h4>
+            <div class="schedule-item">Makers AI deep-dive &mdash; <strong>Tom Sparks, Adrian Ardelean</strong></div>
+          </div>
+
+          <div class="schedule-day">
+            <h4>Friday 20 Feb</h4>
+            <div class="schedule-item">Makers AI follow-up &mdash; <strong>Tom Sparks, Adrian Ardelean, Tyrone Hannick</strong></div>
+            <div class="schedule-item">Google Search x AI connect &mdash; <strong>Rebekah Guilar, Chips, Georgia Dixon</strong></div>
+            <div class="schedule-item">Dovetail x Uncommon AI rollout planning &mdash; <strong>Abigail Kennedy, Chips, Tyrone</strong></div>
+            <div class="schedule-item">Data meeting &mdash; <strong>Robyn Darcy</strong></div>
+          </div>
+
+          <div class="gap-block" style="margin-top: 2rem;">
+            <p><strong>Status:</strong> These were introductory sessions. The full department-by-department training programme is the next major phase.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================
+         05 — CURRENT TOOL STACK
+         ============================================ -->
+    <section class="section" id="stack">
+      <span class="section-number">05</span>
+      <h2 class="section-title">Current Tool Stack</h2>
+      <div class="section-subtitle">What is confirmed and what is under evaluation</div>
+
+      <div class="grid-3" style="margin-bottom: 2.5rem;">
+        <div class="card card-highlight">
+          <h3>Core Stack (Confirmed)</h3>
+          <div style="display: flex; flex-wrap: wrap; gap: 0.25rem; margin-top: 1rem;">
+            <span class="tool-tag tool-tag-active">Claude Enterprise</span>
+            <span class="tool-tag tool-tag-active">Gemini Pro</span>
+            <span class="tool-tag tool-tag-active">Imogen</span>
+            <span class="tool-tag tool-tag-active">VEO</span>
+            <span class="tool-tag tool-tag-active">Runway</span>
+            <span class="tool-tag tool-tag-active">n8n</span>
+          </div>
+          <p style="margin-top: 1rem; font-size: 0.8125rem;">10 Claude licences deployed, phased rollout to follow. Gemini Pro included with Google Workspace for all 223 staff.</p>
+        </div>
+
+        <div class="card">
+          <h3>Under Evaluation</h3>
+          <div style="display: flex; flex-wrap: wrap; gap: 0.25rem; margin-top: 1rem;">
+            <span class="tool-tag tool-tag-eval">Flim</span>
+            <span class="tool-tag tool-tag-eval">Weavey</span>
+          </div>
+          <p style="margin-top: 1rem; font-size: 0.8125rem;">Reference and mood board tools for Production and Creative teams. Under active assessment.</p>
+        </div>
+
+        <div class="card">
+          <h3>Still to Roll Out</h3>
+          <div style="display: flex; flex-wrap: wrap; gap: 0.25rem; margin-top: 1rem;">
+            <span class="tool-tag tool-tag-pending">Imogen Licences</span>
+            <span class="tool-tag tool-tag-pending">Claude Full Rollout</span>
+          </div>
+          <p style="margin-top: 1rem; font-size: 0.8125rem;">Imogen (VEO, Nano Banana) beyond initial deployment. Additional Claude licences across the full agency.</p>
+        </div>
+      </div>
+
+      <div class="gap-block">
+        <p><strong>Integration Required:</strong> Every user needs to be connected to Google Drive, Google Calendar, and Gmail within their Claude setup. This is foundational to making the tool stack actually useful in daily workflows.</p>
+      </div>
+    </section>
+
+    <!-- ============================================
+         06 — COST MANAGEMENT
+         ============================================ -->
+    <section class="section" id="costs">
+      <span class="section-number">06</span>
+      <h2 class="section-title">Cost Management</h2>
+      <div class="section-subtitle">Rationalised seats and educated usage</div>
+
+      <div class="grid-2" style="margin-bottom: 2.5rem;">
+        <div class="card">
+          <h3>Seat Rationalisation</h3>
+          <p>Not every person needs every tool. Uncommon already has Gemini Pro included with Google Workspace, meaning all 223 staff have access to a capable AI assistant at no additional cost.</p>
+          <p>Claude Enterprise seats should be reserved for power users and departments where advanced capabilities genuinely matter: complex strategy work, custom Skills and Projects, deep research, long-context document analysis, and specialist prompt workflows.</p>
+          <div class="gap-block" style="margin-top: 1rem;">
+            <p>This tiered approach means Uncommon might need <strong>80-100 Claude seats</strong> rather than 223, with Gemini Pro covering the rest. That is a significant cost saving.</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Token Usage: The Hidden Cost</h3>
+          <p>Claude operates on a fixed monthly token allowance per user. Tokens are consumed with every conversation, and some features burn through them significantly faster than others.</p>
+          <ul class="list-brutal" style="margin-top: 1rem;">
+            <li><strong>Opus 4.6</strong> uses substantially more tokens per interaction than Sonnet</li>
+            <li><strong>Deep Research</strong> runs consume large token volumes in a single session</li>
+            <li>A user running multiple Deep Research sessions on Opus could exhaust their monthly allowance in days</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card card-highlight">
+          <h3>The Education Piece</h3>
+          <p>Staff need to understand the difference between models and when to use each one.</p>
+          <ul class="list-brutal" style="margin-top: 0.75rem;">
+            <li><strong>Sonnet</strong> handles the majority of daily tasks quickly and efficiently</li>
+            <li><strong>Opus</strong> is for complex reasoning, nuanced strategy work, and tasks requiring the highest capability</li>
+            <li><strong>Deep Research</strong> is powerful but expensive and should be used deliberately, not as a default</li>
+          </ul>
+        </div>
+
+        <div class="card card-highlight">
+          <h3>What This Means for Rollout</h3>
+          <p>Training must include practical guidance on token-efficient usage. Not just "here is how to use Claude" but <strong>"here is how to use Claude smartly."</strong></p>
+          <p>This is a core part of the training programme, not an afterthought.</p>
+        </div>
+      </div>
+
+      <!-- GEMINI FOR LIGHT USERS -->
+      <div style="margin-top: 3rem;">
+        <hr class="divider">
+        <span class="gemini-badge">Gemini Pro // Already Included</span>
+        <h3 style="font-size: 1.5rem; color: var(--yellow-electric); margin-bottom: 0.5rem;">Gemini Pro for Light AI Users</h3>
+        <p class="lead" style="margin-bottom: 2.5rem;">Every one of Uncommon's 223 staff already has access to Gemini Pro through Google Workspace at no additional cost. For light AI users, this is more than enough. Here is what Gemini handles well &mdash; and where Claude takes over.</p>
+
+        <div class="grid-2" style="margin-bottom: 2rem;">
+          <div class="card" style="border-color: rgba(255, 235, 59, 0.3);">
+            <span class="gemini-badge">Use Gemini For</span>
+            <h3 style="color: var(--yellow-electric);">Everyday AI Tasks</h3>
+            <ul class="list-brutal">
+              <li><strong>Quick drafts and email summaries</strong> &mdash; fast, integrated with Gmail</li>
+              <li><strong>Meeting prep and notes</strong> &mdash; pulls from Google Calendar and Docs</li>
+              <li><strong>Basic research and fact-checking</strong> &mdash; web-grounded answers with sources</li>
+              <li><strong>Document summarisation</strong> &mdash; massive context window handles 1,000+ page PDFs</li>
+              <li><strong>Brainstorming and ideation</strong> &mdash; quick lists, alternatives, first-pass thinking</li>
+              <li><strong>Data ingestion at scale</strong> &mdash; analysing large volumes of PDFs, spreadsheets, or video transcripts</li>
+              <li><strong>Google Workspace integration</strong> &mdash; native access to Drive, Sheets, Slides, and Docs</li>
+            </ul>
+          </div>
+
+          <div class="card" style="border-color: var(--border-strong);">
+            <span class="claude-badge">Upgrade to Claude For</span>
+            <h3 style="color: var(--red-hot);">Advanced Capabilities</h3>
+            <ul class="list-brutal">
+              <li><strong>Deep synthesis and reasoning</strong> &mdash; connecting dots between complex, contradictory sources</li>
+              <li><strong>Edge case detection</strong> &mdash; finding subtle logical gaps and lurking variables in data</li>
+              <li><strong>Long-session coherence</strong> &mdash; context compaction keeps Claude on track across 100+ turn conversations</li>
+              <li><strong>Polished writing and tone</strong> &mdash; more nuanced, human style for literature reviews and executive summaries</li>
+              <li><strong>Citation reliability</strong> &mdash; says "I don't know" rather than risking hallucination. Critical for client work</li>
+              <li><strong>Custom Skills and Projects</strong> &mdash; department-specific AI capabilities loaded on demand</li>
+              <li><strong>Automation pipelines</strong> &mdash; multi-agent coordination, computer use, and n8n integration</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card" style="border-color: var(--border-subtle); overflow-x: auto;">
+          <h3>When to Use Each Tool</h3>
+          <table class="compare-table">
+            <thead>
+              <tr>
+                <th>Task</th>
+                <th>Gemini Pro</th>
+                <th>Claude</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Data Ingestion</td>
+                <td>Analysing 1,000+ PDFs or 2-hour videos</td>
+                <td>Deep analysis of 5-10 key papers</td>
+              </tr>
+              <tr>
+                <td>Speed / Cost</td>
+                <td>High-volume screening and summaries</td>
+                <td>High-quality drafting and editing</td>
+              </tr>
+              <tr>
+                <td>Reasoning</td>
+                <td>Algorithmic and mathematical speed</td>
+                <td>Abstract reasoning and edge-case detection</td>
+              </tr>
+              <tr>
+                <td>Workflow</td>
+                <td>Google Workspace / Drive integration</td>
+                <td>Multi-agent coordination and Computer Use</td>
+              </tr>
+              <tr>
+                <td>Writing</td>
+                <td>Quick drafts, outlines, first passes</td>
+                <td>Final copy, nuanced tone, client-facing output</td>
+              </tr>
+              <tr>
+                <td>Research</td>
+                <td>Broad sweeps, trend scanning, volume</td>
+                <td>Deep synthesis, critique, sourcing integrity</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="gap-block" style="margin-top: 2rem;">
+          <p><strong>The bottom line:</strong> Gemini Pro covers 70-80% of what most staff need on a daily basis, and they already have it. Claude Enterprise seats go to the people who need the remaining 20-30%: deep reasoning, custom Skills, automation, and polished output. This is how you get full agency coverage without 223 Claude licences.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================
+         07 — CURRENT STATE
+         ============================================ -->
+    <section class="section" id="state">
+      <span class="section-number">07</span>
+      <h2 class="section-title">Current State</h2>
+      <div class="section-subtitle">What exists and what still needs to happen</div>
+
+      <div class="grid-2">
+        <div class="card" style="border-color: var(--orange-accent);">
+          <h3 style="color: var(--orange-accent);">What Exists</h3>
+          <ul class="list-check list-brutal">
+            <li>Custom AI dashboard (hosted web app) with loadable skills, plugins, and projects</li>
+            <li>Skill writing tool and prompt writing tool built and functional</li>
+            <li>Comprehensive guides and documentation</li>
+            <li>10 Claude licences deployed across a mixed group</li>
+            <li>Core tool stack identified (Claude, Imogen, Runway, n8n)</li>
+            <li>Initial department sessions completed</li>
+            <li>Google partnership activated</li>
+            <li>Dovetail/Redbaez responsibilities being defined</li>
+          </ul>
+        </div>
+
+        <div class="card card-red">
+          <h3 style="color: var(--red-hot);">What Still Needs to Happen</h3>
+          <ul class="list-brutal">
+            <li>Full Claude rollout across 223 staff</li>
+            <li>Department-by-department training programme</li>
+            <li>Google Drive, Calendar, and Gmail integration for every user</li>
+            <li>Project setup and skill loading for each team</li>
+            <li>Plugin development and refinement as teams start using the system</li>
+            <li>Ongoing tool evaluation (Flim, Weavey, and whatever comes next)</li>
+            <li>n8n automation builds for cross-department workflows</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="gap-block" style="margin-top: 2rem;">
+        <p><strong>The Gap:</strong> The dashboard, skills, and tools are built. But they are only useful if 223 people know how to use them. The rollout plan, training programme, and ongoing build work is where the real transformation happens.</p>
+      </div>
+    </section>
+
+    <!-- ============================================
+         08 — THE ROLLOUT PLAN
+         ============================================ -->
+    <section class="section" id="rollout">
+      <span class="section-number">08</span>
+      <h2 class="section-title">The Rollout Plan</h2>
+      <div class="section-subtitle">Getting from 10 licences to 223 trained users</div>
+
+      <div class="phase">
+        <div class="phase-label">Phase 1: Foundation (Immediate)</div>
+        <p>Complete the Dovetail/Redbaez responsibility split. Finalise the core tool stack. Confirm licence procurement for full rollout. Establish the rollout sequence by department.</p>
+      </div>
+
+      <div class="phase">
+        <div class="phase-label">Phase 2: Department-by-Department Training</div>
+        <p>Each department receives a structured training programme covering:</p>
+        <ul class="list-brutal" style="margin-top: 0.75rem;">
+          <li>Claude setup with Google Drive, Calendar, and Gmail connected</li>
+          <li>Loading their department-specific Projects and Skills</li>
+          <li>Loading relevant Plugins</li>
+          <li>Hands-on practice with real workflows</li>
+          <li>Prompt engineering for their specific use cases</li>
+          <li>Dashboard orientation and guide walkthrough</li>
+        </ul>
+      </div>
+
+      <div class="phase">
+        <div class="phase-label">Phase 3: Automation and Integration</div>
+        <p>n8n workflows deployed for cross-department processes. Timeline automation as the first universal quick win. Meeting notes, status reports, and client communication workflows follow.</p>
+      </div>
+
+      <div class="phase">
+        <div class="phase-label">Phase 4: Ongoing Development</div>
+        <p>New Skills built as needs emerge (using the Skill writing tool). Prompt libraries expanded based on team feedback. Tool stack evaluated quarterly. New tools added through governance process.</p>
+      </div>
+    </section>
+
+    <!-- ============================================
+         09 — WHAT NEEDS BUILDING
+         ============================================ -->
+    <section class="section" id="building">
+      <span class="section-number">09</span>
+      <h2 class="section-title">What Needs Building</h2>
+      <div class="section-subtitle">Concrete deliverables for the next phase</div>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3>Claude Skills and Projects</h3>
+          <p>Refined and expanded Skills for each department as they start using the system.</p>
+          <ul class="list-brutal" style="margin-top: 0.75rem;">
+            <li>Brief response accelerators for Creative</li>
+            <li>Research and insight systems for Strategy</li>
+            <li>Client communication tools for Account Management</li>
+            <li>Timeline and specification tools for Production</li>
+            <li>RFP response system for New Business</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>n8n Automations</h3>
+          <ul class="list-brutal">
+            <li>Status report auto-generation</li>
+            <li>Meeting notes processing pipeline</li>
+            <li>Client email triage and draft responses</li>
+            <li>Cross-department notification workflows</li>
+            <li>Timeline generation (the universal quick win every department wants)</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>Training Programme</h3>
+          <p>Structured rollout sessions for all 223 staff. Not a one-off presentation. Hands-on, department-specific, with real workflows. Ongoing coaching and troubleshooting as adoption ramps up.</p>
+        </div>
+
+        <div class="card">
+          <h3>Governance and Optimisation</h3>
+          <ul class="list-brutal">
+            <li>Tool licence management and quarterly review</li>
+            <li>Usage monitoring and ROI tracking</li>
+            <li>New tool evaluation (Flim, Weavey, and future candidates)</li>
+            <li>Dovetail coordination for IT provisioning and support</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================
+         10 — THE THREE WORKSTREAMS
+         ============================================ -->
+    <section class="section" id="workstreams">
+      <span class="section-number">10</span>
+      <h2 class="section-title">The Three Workstreams</h2>
+      <div class="section-subtitle">Ongoing work required to realise the AI investment</div>
+
+      <div class="grid-3">
+        <div class="card workstream workstream-build">
+          <span class="workstream-label">Build</span>
+          <p>Custom Claude Skills and Projects for each department. Prompt libraries for recurring tasks. n8n automation workflows. Timeline generators, brief processors, report builders. Dashboard refinement and new feature development.</p>
+          <div class="gap-block" style="margin-top: 1rem; margin-bottom: 0;">
+            <p style="font-size: 0.8125rem; margin: 0;">This is the work that turns a tool subscription into a <strong>competitive advantage</strong>.</p>
+          </div>
+        </div>
+
+        <div class="card workstream workstream-train">
+          <span class="workstream-label">Train</span>
+          <p>Department-by-department rollout across 223 staff. Google Workspace integration for every user. Project and Skill loading sessions. Prompt engineering coaching. Ongoing support as teams push boundaries.</p>
+          <div class="gap-block" style="margin-top: 1rem; margin-bottom: 0;">
+            <p style="font-size: 0.8125rem; margin: 0;">This is the work that turns a dashboard into <strong>daily practice</strong>.</p>
+          </div>
+        </div>
+
+        <div class="card workstream workstream-evolve">
+          <span class="workstream-label">Evolve</span>
+          <p>Tool evaluation as the market changes monthly. Licence optimisation as usage data arrives. New capability identification. Vendor relationship management. Strategic AI roadmap advisory.</p>
+          <div class="gap-block" style="margin-top: 1rem; margin-bottom: 0;">
+            <p style="font-size: 0.8125rem; margin: 0;">This is the work that keeps Uncommon <strong>ahead of the curve</strong>.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================
+         11 — THE MODEL
+         ============================================ -->
+    <section class="section" id="model">
+      <span class="section-number">11</span>
+      <h2 class="section-title">The Model</h2>
+      <div class="section-subtitle">4 days per month: embedded AI expertise</div>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3>What Each Month Includes</h3>
+          <p>Any combination of:</p>
+          <ul class="list-brutal" style="margin-top: 0.75rem;">
+            <li>Custom Claude Skills and Project builds</li>
+            <li>n8n automation design and deployment</li>
+            <li>Training session design and delivery</li>
+            <li>Prompt libraries and template creation</li>
+            <li>Tool evaluation and vendor assessment</li>
+            <li>AI strategy and roadmap advisory</li>
+            <li>Budget and licence optimisation</li>
+            <li>Dashboard development and refinement</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>How It Works</h3>
+          <p>Flexible allocation across the month. Some months heavy on builds, others on training or strategy. Priorities agreed with Chips. Quarterly on-site weeks in London billed separately for travel. Remote delivery the rest of the time.</p>
+          <hr class="divider" style="margin: 1.5rem 0;">
+          <h3>Why This Expertise Matters</h3>
+          <p>This is not generic IT consultancy. It requires deep understanding of advertising and creative agency workflows, hands-on AI build capability (Claude Skills, n8n, prompt engineering, web development), vendor knowledge across a rapidly evolving AI landscape, and 30 years of agency experience to know what actually helps creative teams.</p>
+          <p style="color: var(--red-hot); font-weight: 700; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 1rem;">Nobody else in the Uncommon ecosystem can do this work.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================
+         12 — CLEAR RESPONSIBILITIES
+         ============================================ -->
+    <section class="section" id="responsibilities">
+      <span class="section-number">12</span>
+      <h2 class="section-title">Clear Responsibilities</h2>
+      <div class="section-subtitle">Two essential roles, clearly delineated</div>
+
+      <div class="grid-2">
+        <div class="card resp-col resp-redbaez" style="border-color: var(--red-hot);">
+          <span class="resp-header">Redbaez / Tom Hyde: AI Transformation</span>
+          <ul class="list-brutal">
+            <li>AI strategy and roadmap</li>
+            <li>Dashboard development and maintenance</li>
+            <li>Custom Claude Skills and Project builds</li>
+            <li>n8n automation architecture and deployment</li>
+            <li>Prompt engineering and template creation</li>
+            <li>Tool evaluation and vendor management</li>
+            <li>Training programme design and delivery</li>
+            <li>Budget optimisation and ROI tracking</li>
+            <li>Google partnership coordination</li>
+          </ul>
+        </div>
+
+        <div class="card resp-col resp-dovetail">
+          <span class="resp-header">Dovetail: IT Operations</span>
+          <ul class="list-brutal">
+            <li>Account provisioning and user management</li>
+            <li>SSO and domain configuration</li>
+            <li>Hardware and network support</li>
+            <li>IT helpdesk for access issues</li>
+            <li>On-site technical support</li>
+            <li>Security and compliance infrastructure</li>
+            <li>Licence deployment and seat management</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="gap-block" style="margin-top: 2rem;">
+        <p>Both roles are essential. Neither replaces the other. <strong>AI transformation requires advertising-grade expertise, not IT-grade implementation.</strong> Dovetail keeps the infrastructure running. Redbaez builds the AI capabilities on top of it.</p>
+      </div>
+    </section>
+
+    <!-- ============================================
+         13 — THE INVESTMENT CASE
+         ============================================ -->
+    <section class="section" id="investment">
+      <span class="section-number">13</span>
+      <h2 class="section-title">The Investment Case</h2>
+      <div class="section-subtitle">Value delivered and value at stake</div>
+
+      <div class="card" style="border-color: var(--orange-accent); margin-bottom: 2rem;">
+        <h3>What Has Already Been Delivered</h3>
+        <p>A custom AI dashboard with loadable skills, plugins, and projects per department. A skill writing tool and prompt writing tool. Comprehensive guides. Tool audit and rationalisation from 81 to a governed core stack. Legal risk assessments. Department interviews and workflow mapping. Initial immersion sessions. Google partnership connection.</p>
+        <div class="gap-block" style="margin-top: 1rem; margin-bottom: 0;">
+          <p>All of this for approximately <strong>&pound;20K in consulting fees</strong>. The dashboard alone, if procured externally, would cost significantly more.</p>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card card-red">
+          <h3 style="color: var(--red-hot);">Without Ongoing Support</h3>
+          <ul class="list-brutal">
+            <li>The dashboard sits unused</li>
+            <li>213 staff never get trained</li>
+            <li>The &pound;221K annual tool investment delivers no return</li>
+            <li>Departments revert to scattered, ungoverned AI usage</li>
+            <li>The transformation stalls at 10 licences</li>
+          </ul>
+        </div>
+
+        <div class="card" style="border-color: var(--orange-accent);">
+          <h3 style="color: var(--orange-accent);">With the Retainer</h3>
+          <ul class="list-check list-brutal">
+            <li>223 staff get trained and connected</li>
+            <li>Skills and automations compound time savings across every department</li>
+            <li>The tool investment delivers measurable ROI</li>
+            <li>New capabilities emerge as the AI landscape evolves</li>
+            <li>Uncommon becomes the agency that actually transformed, not the one that bought subscriptions</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================
+         14 — NEXT STEPS
+         ============================================ -->
+    <section class="section" id="next">
+      <span class="section-number">14</span>
+      <h2 class="section-title">Next Steps</h2>
+      <div class="section-subtitle">Clear actions, clear timeline</div>
+
+      <div class="grid-3" style="margin-bottom: 3rem;">
+        <div class="card card-highlight">
+          <h3>This Week</h3>
+          <ul class="list-brutal">
+            <li>Align on retainer structure and start date</li>
+            <li>Confirm the full rollout sequence by department</li>
+            <li>Formalise Dovetail/Redbaez responsibilities</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>Month 1</h3>
+          <ul class="list-brutal">
+            <li>Begin structured training rollout (priority departments first)</li>
+            <li>Deploy additional Claude licences</li>
+            <li>First n8n automations live (timeline generator)</li>
+            <li>Google Workspace integrations for all active users</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>Ongoing</h3>
+          <ul class="list-brutal">
+            <li>Monthly deliverable reporting</li>
+            <li>Quarterly on-site London weeks</li>
+            <li>Continuous Skill and automation development</li>
+            <li>Tool stack evolution and licence management</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="cta-block">
+        <h3 style="color: var(--orange-accent); margin-bottom: 1.5rem;">What I Need from You, Chips</h3>
+        <ol class="numbered-list" style="max-width: 40rem; margin: 0 auto; text-align: left;">
+          <li>Confirmation on retainer structure and budget alignment with Philip and the finance team</li>
+          <li>Department priority order for the training rollout</li>
+          <li>Dovetail responsibilities formally agreed</li>
+          <li>Green light to start building the next phase</li>
+        </ol>
+        <p style="margin-top: 2rem; font-size: 0.875rem; color: var(--white-dim);">I will prepare a formal retainer proposal with specific monthly deliverable commitments once we have aligned on structure.</p>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ============================================
+       FOOTER / CLOSING
+       ============================================ -->
+  <footer class="footer">
+    <div class="footer-tagline">Kill the Grind.</div>
+    <div class="footer-tagline" style="color: var(--orange-accent);">Amplify the Genius.</div>
+    <div class="footer-contact">
+      <p style="color: var(--white-full); font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.875rem;">Tom Hyde / Redbaez Consulting</p>
+      <p><a href="mailto:tomh@redbaez.com">tomh@redbaez.com</a></p>
+    </div>
+    <p style="margin-top: 3rem; font-size: 0.65rem; color: var(--white-faint); text-transform: uppercase; letter-spacing: 0.15em;">February 2026 // Confidential</p>
+  </footer>
+
+</body>
+</html>
