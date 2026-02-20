@@ -917,11 +917,86 @@
     }
 
     /* ============================================
+       SECTION NAV ARROWS
+       ============================================ */
+    .section-arrows {
+      position: fixed;
+      right: 1.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 90;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .section-arrow {
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(10, 10, 10, 0.85);
+      border: 1px solid var(--border-subtle);
+      color: var(--white-dim);
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: var(--font-sans);
+      backdrop-filter: blur(8px);
+    }
+
+    .section-arrow:hover {
+      border-color: var(--red-hot);
+      color: var(--red-hot);
+      background: rgba(10, 10, 10, 0.95);
+    }
+
+    .section-arrow:disabled {
+      opacity: 0.2;
+      cursor: default;
+      pointer-events: none;
+    }
+
+    .section-arrow svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
+    }
+
+    .section-indicator {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      font-weight: 700;
+      color: var(--white-dim);
+      text-align: center;
+      letter-spacing: 0.05em;
+      line-height: 1;
+      padding: 0.25rem 0;
+      user-select: none;
+    }
+
+    @media (max-width: 900px) {
+      .section-arrows {
+        right: 0.75rem;
+      }
+      .section-arrow {
+        width: 38px;
+        height: 38px;
+      }
+    }
+
+    @media print {
+      .section-arrows { display: none; }
+    }
+
+    /* ============================================
        PRINT STYLES
        ============================================ */
     @media print {
       body { background: white; color: black; }
-      .nav, .scroll-progress { display: none; }
+      .nav, .scroll-progress, .section-arrows { display: none; }
       .section { page-break-inside: avoid; }
     }
   </style>
@@ -1636,6 +1711,17 @@
     <p style="margin-top: 3rem; font-size: 0.6875rem; color: var(--white-faint); text-transform: uppercase; letter-spacing: 0.15em;">February 2026</p>
   </footer>
 
+  <!-- Section nav arrows -->
+  <div class="section-arrows" id="sectionArrows">
+    <button class="section-arrow" id="arrowUp" aria-label="Previous section">
+      <svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"></polyline></svg>
+    </button>
+    <div class="section-indicator" id="sectionIndicator"></div>
+    <button class="section-arrow" id="arrowDown" aria-label="Next section">
+      <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+    </button>
+  </div>
+
   <!-- ============================================
        SCRIPTS
        ============================================ -->
@@ -1669,6 +1755,65 @@
         links.classList.remove('open');
       }
     });
+
+    // Section navigation arrows
+    (function() {
+      var sections = Array.from(document.querySelectorAll('.hero, .section'));
+      var upBtn = document.getElementById('arrowUp');
+      var downBtn = document.getElementById('arrowDown');
+      var indicator = document.getElementById('sectionIndicator');
+      var currentIndex = 0;
+
+      function getCurrentSection() {
+        var scrollY = window.scrollY + window.innerHeight * 0.35;
+        var idx = 0;
+        for (var i = sections.length - 1; i >= 0; i--) {
+          if (sections[i].offsetTop <= scrollY) {
+            idx = i;
+            break;
+          }
+        }
+        return idx;
+      }
+
+      function updateArrows() {
+        currentIndex = getCurrentSection();
+        upBtn.disabled = currentIndex === 0;
+        downBtn.disabled = currentIndex === sections.length - 1;
+        // Show as "current / total" (hero = 0, sections = 1-13)
+        indicator.textContent = currentIndex + '/' + (sections.length - 1);
+      }
+
+      upBtn.addEventListener('click', function() {
+        currentIndex = getCurrentSection();
+        if (currentIndex > 0) {
+          sections[currentIndex - 1].scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+
+      downBtn.addEventListener('click', function() {
+        currentIndex = getCurrentSection();
+        if (currentIndex < sections.length - 1) {
+          sections[currentIndex + 1].scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+
+      // Keyboard arrows
+      document.addEventListener('keydown', function(e) {
+        // Don't hijack if user is in an input or details element
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+        if (e.key === 'ArrowUp' && e.altKey) {
+          e.preventDefault();
+          upBtn.click();
+        } else if (e.key === 'ArrowDown' && e.altKey) {
+          e.preventDefault();
+          downBtn.click();
+        }
+      });
+
+      window.addEventListener('scroll', updateArrows, { passive: true });
+      updateArrows();
+    })();
   </script>
 
 </body>
